@@ -1,21 +1,10 @@
 const { employees } = require('../data/zoo_data');
 const getSpeciesByIds = require('./getSpeciesByIds');
-
-function getEmployeeById(id) {
-  return employees.find((employee) => employee.id === id);
-}
-
-function getEmployeeByFirstOrLastName(name) {
-  return employees.find((e) => e.firstName === name || e.lastName === name);
-}
-
-function getSpeciesLocations(species) {
-  return species.map((specie) => specie.location);
-}
-
-function getSpeciesNames(species) {
-  return species.map((specie) => specie.name);
-}
+const getSpeciesLocations = require('./getSpeciesLocations');
+const getNames = require('./getNames');
+const getEmployeeById = require('./getEmployeeById');
+const getEmployeeByName = require('./getEmployeeByName');
+const isUndefinedOrEmpty = require('./isUndefinedOrEmpty');
 
 function getEmployeeCoverage(employee) {
   const species = getSpeciesByIds(...employee.responsibleFor);
@@ -24,7 +13,7 @@ function getEmployeeCoverage(employee) {
   return {
     id: employee.id,
     fullName: `${employee.firstName} ${employee.lastName}`,
-    species: getSpeciesNames(species),
+    species: getNames(species),
     locations,
   };
 }
@@ -36,9 +25,9 @@ function getEmployeesCoverage(options) {
 
   const employee = options.id
     ? getEmployeeById(options.id)
-    : getEmployeeByFirstOrLastName(options.name);
+    : getEmployeeByName(options.name);
 
-  if (employee === undefined) {
+  if (isUndefinedOrEmpty(employee)) {
     throw new Error('Informações inválidas');
   }
 

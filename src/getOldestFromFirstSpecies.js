@@ -1,12 +1,5 @@
-const { employees, species } = require('../data/zoo_data');
-
-function getEmployeeById(id) {
-  return employees.find((employee) => employee.id === id);
-}
-
-function getSpecieById(id) {
-  return species.find((specie) => specie.id === id);
-}
+const getEmployeeById = require('./getEmployeeById');
+const getSpecieById = require('./getSpecieById');
 
 function getOldestAnimalFromSpecie(specie) {
   const copyOfResidents = [...specie.residents];

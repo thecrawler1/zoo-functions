@@ -1,7 +1,9 @@
 const data = require('../data/zoo_data');
+const getSpeciesLocations = require('./getSpeciesLocations');
+const getNames = require('./getNames');
 
-function getAllSpeciesLocations() {
-  const locations = data.species.map(({ location }) => location);
+function getUniqueSpeciesLocations() {
+  const locations = getSpeciesLocations(data.species);
   const uniqueLocations = [...new Set(locations)];
 
   return uniqueLocations;
@@ -16,9 +18,7 @@ function getResidentsNamesWithSexFilter(residents, sex) {
     ? residents.filter((resident) => resident.sex === sex)
     : residents;
 
-  const names = animals.map((animal) => animal.name);
-
-  return names;
+  return getNames(animals);
 }
 
 function getSpeciesWithResidentsNames(species, { sorted, sex }) {
@@ -31,16 +31,12 @@ function getSpeciesWithResidentsNames(species, { sorted, sex }) {
   });
 }
 
-function getSpeciesNames(species) {
-  return species.map((specie) => specie.name);
-}
-
 function getAnimalsFromLocation(location, options) {
   const speciesFromLocation = getSpeciesFromLocation(location);
 
   return options.includeNames
     ? getSpeciesWithResidentsNames(speciesFromLocation, options)
-    : getSpeciesNames(speciesFromLocation);
+    : getNames(speciesFromLocation);
 }
 
 function reduceAnimalMap(options) {
@@ -51,7 +47,7 @@ function reduceAnimalMap(options) {
 }
 
 function getAnimalMap(options = {}) {
-  const locations = getAllSpeciesLocations();
+  const locations = getUniqueSpeciesLocations();
 
   return locations.reduce(reduceAnimalMap(options), {});
 }

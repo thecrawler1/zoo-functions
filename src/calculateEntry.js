@@ -1,8 +1,5 @@
 const { prices } = require('../data/zoo_data');
-
-function isUndefinedOrEmpty(x) {
-  return x === undefined || Object.keys(x).length === 0;
-}
+const isUndefinedOrEmpty = require('./isUndefinedOrEmpty');
 
 function getAgeCategory(age) {
   if (age < 18) return 'child';
@@ -10,22 +7,26 @@ function getAgeCategory(age) {
   return 'senior';
 }
 
-function reduceCount(count, category) {
+function getEntrantsAgeCategories(entrants) {
+  return entrants.map(({ age }) => getAgeCategory(age));
+}
+
+function reduceCountEntrants(count, ageCategory) {
   return {
     ...count,
-    [category]: count[category] + 1,
+    [ageCategory]: count[ageCategory] + 1,
   };
 }
 
 function countEntrants(entrants) {
-  const categories = entrants.map(({ age }) => getAgeCategory(age));
+  const ageCategories = getEntrantsAgeCategories(entrants);
   const initialCount = { child: 0, adult: 0, senior: 0 };
 
-  return categories.reduce(reduceCount, initialCount);
+  return ageCategories.reduce(reduceCountEntrants, initialCount);
 }
 
-function reduceTotal(count) {
-  return (total, category) => total + prices[category] * count[category];
+function reducePriceTotal(count) {
+  return (total, ageCategory) => total + prices[ageCategory] * count[ageCategory];
 }
 
 function calculateEntry(entrants) {
@@ -35,7 +36,7 @@ function calculateEntry(entrants) {
 
   const count = countEntrants(entrants);
 
-  return ['child', 'adult', 'senior'].reduce(reduceTotal(count), 0);
+  return ['child', 'adult', 'senior'].reduce(reducePriceTotal(count), 0);
 }
 
 module.exports = { calculateEntry, countEntrants };

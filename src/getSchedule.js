@@ -1,24 +1,16 @@
 const { hours, species } = require('../data/zoo_data');
+const getSpecieByName = require('./getSpecieByName');
+const getNames = require('./getNames');
 
 function getWeekdays() {
   return Object.keys(hours);
 }
 
-function getSpeciesNames() {
-  return species.map(({ name }) => name);
-}
-
 function getSpeciesNamesAvailableOnAWeekday(weekday) {
   const speciesAvailable = species.filter((specie) => specie.availability.includes(weekday));
-  const speciesNames = speciesAvailable.map(({ name }) => name);
+  const speciesNames = getNames(speciesAvailable);
 
   return speciesNames;
-}
-
-function getWeekdaysWhenASpecieIsAvailable(specieName) {
-  const specie = species.find(({ name }) => name === specieName);
-
-  return specie.availability;
 }
 
 function getWeekdaySchedule(weekday) {
@@ -48,10 +40,12 @@ function getCompleteSchedule() {
 }
 
 function getSchedule(scheduleTarget) {
-  const speciesNames = getSpeciesNames();
+  const speciesNames = getNames(species);
 
   if (speciesNames.includes(scheduleTarget)) {
-    return getWeekdaysWhenASpecieIsAvailable(scheduleTarget);
+    const specie = getSpecieByName(scheduleTarget);
+
+    return specie.availability;
   }
 
   const schedule = getCompleteSchedule();
