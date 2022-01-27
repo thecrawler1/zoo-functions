@@ -1,8 +1,8 @@
 const data = require('../data/zoo_data');
 
 function getAllSpeciesLocations() {
-  const allLocations = data.species.map(({ location }) => location);
-  const uniqueLocations = [...new Set(allLocations)];
+  const locations = data.species.map(({ location }) => location);
+  const uniqueLocations = [...new Set(locations)];
 
   return uniqueLocations;
 }
@@ -43,15 +43,17 @@ function getAnimalsFromLocation(location, options) {
     : getSpeciesNames(speciesFromLocation);
 }
 
+function reduceAnimalMap(options) {
+  return (animalMap, location) => ({
+    ...animalMap,
+    [location]: getAnimalsFromLocation(location, options),
+  });
+}
+
 function getAnimalMap(options = {}) {
   const locations = getAllSpeciesLocations();
-  const animalMap = {};
 
-  locations.forEach((location) => {
-    animalMap[location] = getAnimalsFromLocation(location, options);
-  });
-
-  return animalMap;
+  return locations.reduce(reduceAnimalMap(options), {});
 }
 
 module.exports = getAnimalMap;

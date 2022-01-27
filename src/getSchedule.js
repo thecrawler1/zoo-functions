@@ -21,28 +21,36 @@ function getWeekdaysWhenASpecieIsAvailable(specieName) {
   return specie.availability;
 }
 
+function getWeekdaySchedule(weekday) {
+  const { open, close } = hours[weekday];
+
+  return weekday === 'Monday'
+    ? {
+      officeHour: 'CLOSED',
+      exhibition: 'The zoo will be closed!',
+    } : {
+      officeHour: `Open from ${open}am until ${close}pm`,
+      exhibition: getSpeciesNamesAvailableOnAWeekday(weekday),
+    };
+}
+
+function reduceSchedule(schedule, weekday) {
+  return {
+    ...schedule,
+    [weekday]: getWeekdaySchedule(weekday),
+  };
+}
+
 function getCompleteSchedule() {
   const weekdays = getWeekdays();
-  const schedule = {};
 
-  weekdays.forEach((weekday) => {
-    const { open, close } = hours[weekday];
-
-    schedule[weekday] = weekday === 'Monday'
-      ? {
-        officeHour: 'CLOSED',
-        exhibition: 'The zoo will be closed!',
-      } : {
-        officeHour: `Open from ${open}am until ${close}pm`,
-        exhibition: getSpeciesNamesAvailableOnAWeekday(weekday),
-      };
-  });
-
-  return schedule;
+  return weekdays.reduce(reduceSchedule, {});
 }
 
 function getSchedule(scheduleTarget) {
-  if (getSpeciesNames().includes(scheduleTarget)) {
+  const speciesNames = getSpeciesNames();
+
+  if (speciesNames.includes(scheduleTarget)) {
     return getWeekdaysWhenASpecieIsAvailable(scheduleTarget);
   }
 

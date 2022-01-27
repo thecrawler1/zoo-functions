@@ -1,19 +1,16 @@
 const { species } = require('../data/zoo_data');
 const getSpecieByName = require('./getSpecieByName');
 
-function countAllAnimals() {
-  const animals = {};
-
-  species.forEach((specie) => {
-    animals[specie.name] = specie.residents.length;
-  });
-
-  return animals;
+function reduceCount(count, specie) {
+  return {
+    ...count,
+    [specie.name]: specie.residents.length,
+  };
 }
 
 function countAnimals(options) {
   if (options === undefined) {
-    return countAllAnimals();
+    return species.reduce(reduceCount, {});
   }
 
   const specie = getSpecieByName(options.specie);
