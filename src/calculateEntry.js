@@ -7,11 +7,9 @@ function getAgeCategory(age) {
   return 'senior';
 }
 
-function getEntrantsAgeCategories(entrants) {
-  return entrants.map(({ age }) => getAgeCategory(age));
-}
+function reduceCountEntrants(count, { age }) {
+  const ageCategory = getAgeCategory(age);
 
-function reduceCountEntrants(count, ageCategory) {
   return {
     ...count,
     [ageCategory]: count[ageCategory] + 1,
@@ -19,10 +17,7 @@ function reduceCountEntrants(count, ageCategory) {
 }
 
 function countEntrants(entrants) {
-  const ageCategories = getEntrantsAgeCategories(entrants);
-  const initialCount = { child: 0, adult: 0, senior: 0 };
-
-  return ageCategories.reduce(reduceCountEntrants, initialCount);
+  return entrants.reduce(reduceCountEntrants, { child: 0, adult: 0, senior: 0 });
 }
 
 function reducePriceTotal(count) {
