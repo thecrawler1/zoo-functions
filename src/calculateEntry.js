@@ -20,8 +20,8 @@ function countEntrants(entrants) {
   return entrants.reduce(reduceCountEntrants, { child: 0, adult: 0, senior: 0 });
 }
 
-function reducePriceTotal(count) {
-  return (total, ageCategory) => total + prices[ageCategory] * count[ageCategory];
+function reduceEntry(total, [ageCategory, count]) {
+  return total + prices[ageCategory] * count;
 }
 
 function calculateEntry(entrants) {
@@ -30,8 +30,9 @@ function calculateEntry(entrants) {
   }
 
   const count = countEntrants(entrants);
+  const countEntries = Object.entries(count);
 
-  return ['child', 'adult', 'senior'].reduce(reducePriceTotal(count), 0);
+  return countEntries.reduce(reduceEntry, 0);
 }
 
 module.exports = { calculateEntry, countEntrants };
