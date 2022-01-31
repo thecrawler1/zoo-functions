@@ -6,15 +6,13 @@ function getWeekdays() {
   return Object.keys(hours);
 }
 
-function getSpeciesNamesAvailableOnAWeekday(weekday) {
-  const speciesAvailable = species.filter((specie) => specie.availability.includes(weekday));
-  const speciesNames = getNames(speciesAvailable);
-
-  return speciesNames;
+function filterSpeciesAvailableOnAWeekday(weekday) {
+  return species.filter((s) => s.availability.includes(weekday));
 }
 
 function getWeekdaySchedule(weekday) {
   const { open, close } = hours[weekday];
+  const speciesAvailable = filterSpeciesAvailableOnAWeekday(weekday);
 
   return weekday === 'Monday'
     ? {
@@ -22,7 +20,7 @@ function getWeekdaySchedule(weekday) {
       exhibition: 'The zoo will be closed!',
     } : {
       officeHour: `Open from ${open}am until ${close}pm`,
-      exhibition: getSpeciesNamesAvailableOnAWeekday(weekday),
+      exhibition: getNames(speciesAvailable),
     };
 }
 
