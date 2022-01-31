@@ -12,17 +12,16 @@ function countSpeciesResidents() {
   return species.reduce(reduceCountSpeciesResidents, {});
 }
 
-function filterSpecieResidentsBySex(specie, sex) {
-  return specie.residents.filter((resident) => resident.sex === sex);
+function filterResidentsBySex(residents, sex) {
+  return residents.filter((resident) => resident.sex === sex);
 }
 
-function getSpecieResidents({ specie: specieName, sex }) {
-  const specie = getSpecieByName(specieName);
-  const residents = sex
-    ? filterSpecieResidentsBySex(specie, sex)
-    : specie.residents;
+function getSpecieResidents({ specie: name, sex }) {
+  const { residents } = getSpecieByName(name);
 
-  return residents;
+  return sex
+    ? filterResidentsBySex(residents, sex)
+    : residents;
 }
 
 function countSpecieResidents(options) {
