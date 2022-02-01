@@ -2,8 +2,26 @@ const { hours, species } = require('../data/zoo_data');
 const getSpecieByName = require('./getSpecieByName');
 const getNames = require('./getNames');
 
+function isTargetASpecieName(target) {
+  const speciesNames = getNames(species);
+
+  return speciesNames.includes(target);
+}
+
+function getSpecieAvailabilityByName(name) {
+  const specie = getSpecieByName(name);
+
+  return specie.availability;
+}
+
 function getWeekdays() {
   return Object.keys(hours);
+}
+
+function isTargetAWeekday(target) {
+  const weekdays = getWeekdays();
+
+  return weekdays.includes(target);
 }
 
 function filterSpeciesAvailableOnAWeekday(weekday) {
@@ -24,6 +42,10 @@ function getWeekdaySchedule(weekday) {
     };
 }
 
+function getSingleWeekdayShedule(weekday) {
+  return { [weekday]: getWeekdaySchedule(weekday) };
+}
+
 function reduceSchedule(schedule, weekday) {
   return {
     ...schedule,
@@ -37,22 +59,16 @@ function getCompleteSchedule() {
   return weekdays.reduce(reduceSchedule, {});
 }
 
-function getSchedule(scheduleTarget) {
-  const speciesNames = getNames(species);
-
-  if (speciesNames.includes(scheduleTarget)) {
-    const specie = getSpecieByName(scheduleTarget);
-
-    return specie.availability;
+function getSchedule(target) {
+  if (isTargetASpecieName(target)) {
+    return getSpecieAvailabilityByName(target);
   }
 
-  const schedule = getCompleteSchedule();
-
-  if (scheduleTarget in schedule) {
-    return { [scheduleTarget]: schedule[scheduleTarget] };
+  if (isTargetAWeekday(target)) {
+    return getSingleWeekdayShedule(target);
   }
 
-  return schedule;
+  return getCompleteSchedule();
 }
 
 module.exports = getSchedule;
