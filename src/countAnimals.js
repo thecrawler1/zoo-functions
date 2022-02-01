@@ -8,7 +8,7 @@ function reduceCountSpeciesResidents(count, specie) {
   };
 }
 
-function countSpeciesResidents() {
+function countAllSpeciesResidents() {
   return species.reduce(reduceCountSpeciesResidents, {});
 }
 
@@ -24,7 +24,7 @@ function getSpecieResidents({ specie: name, sex }) {
     : residents;
 }
 
-function countSpecieResidents(options) {
+function countSingleSpecieResidents(options) {
   const residents = getSpecieResidents(options);
 
   return residents.length;
@@ -32,8 +32,8 @@ function countSpecieResidents(options) {
 
 function countAnimals(options) {
   return options
-    ? countSpecieResidents(options)
-    : countSpeciesResidents();
+    ? countSingleSpecieResidents(options)
+    : countAllSpeciesResidents();
 }
 
 module.exports = countAnimals;
